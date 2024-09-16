@@ -1,0 +1,8 @@
+DEBUG:
+{
+  display = "test, verb: to put (something) to a test",
+  index = 2,
+  ordinal = "test, verb: to put (something) to a test",
+  value = { "test, verb: to put (something) to a test", "ref to entry" }
+}
+
