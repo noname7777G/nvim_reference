@@ -1,14 +1,12 @@
 local pick_entry = require"core/pick"
-
 local log = require"core/log"
-
-log.start()
 
 Thesaurus = {}
 Thesaurus.opts = {}
 
 Thesaurus.opts.key = ""
-Thesaurus.opts.cache_words = true
+Thesaurus.opts.open_command = ":vsplit "
+
 
 Thesaurus.home = os.getenv("HOME")
 Thesaurus.url = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/_WORD_?key="
@@ -45,6 +43,8 @@ Thesaurus.lookup = function(word)
   end
 
   pick_entry(entries_file)
+  log.print()
+  log.clear()
 end
 
 Thesaurus.lookup_cword = function()

@@ -10,6 +10,10 @@ local log = require"core/log"
 
 local make_entry_list = function(entries_file)
   local entries = vim.json.decode(entries_file:read(), {objects = true, array = true})
+  if not entries[1].hwi then
+    log.user_err("No entry for that word.")
+    return nil
+  end
 
   local entry_list = {}
 
@@ -26,6 +30,9 @@ end
 
 local pick_entry = function(entries_file, opts)
   local entry_list = make_entry_list(entries_file)
+  if not entry_list then
+    return
+  end
 
   pickers.new(opts, {
     promt_title = "Entry",

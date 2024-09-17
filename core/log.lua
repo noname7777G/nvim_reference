@@ -1,11 +1,5 @@
 local log = {}
 
-local inspect = require"core/inspect"
-
-log.inspect = function(tab)
-  log.debug(inspect(tab))
-end
-
 local function detable_rec(table, str, depth)
   depth = depth or 0
   str = str or ""
@@ -26,35 +20,33 @@ log.detable = function(table)
   log.debug(detable_rec(table))
 end
 
-log.file_path = "./debug_log"
-
-log.start = function()
-  local old_file, errdesc, errno = io.open(log.file_path, "w+")
-
-  if old_file then
-    old_file:close()
-  else
-    print("log error:\n", errdesc, errno)
-  end
-
-  log.file, errdesc, errno = io.open(log.file_path, "a")
-  if not log.file then
-    print("log error:\n", errdesc, errno)
-    return
-  end
-end
+log.str = ""
 
 log.error = function(errdesc, errno)
   errdesc = errdesc or "nil"
   errno = errno or "nil"
   local f = debug.getinfo(2)
 
-  local log_str = "ERROR:\n" .. "TIME: " .. os.date() .. "\nCALLING FUNCTION: " .. f.name .. "\nLINE: " .. f.currentline .. "\nFILE: " .. f.short_src ..  "\nERRDESC: " .. errdesc .. "\nERRNO: " .. errno .. "\n\n"
-  log.file:write(log_str)
+  log.str = log.str .. "ERROR:\n" .. "TIME: " .. os.date() .. "\nCALLING FUNCTION: " .. f.name .. "\nLINE: " .. f.currentline .. "\nFILE: " .. f.short_src ..  "\nERRDESC: " .. errdesc .. "\nERRNO: " .. errno .. "\n\n"
 end
 
 log.debug = function(str)
-  log.file:write("DEBUG:\n" .. str .. "\n\n")
+  str = str or "nil"
+  log.str = log.str .. "DEBUG:\n" .. str .. "\n\n"
+end
+
+log.user_err = function(str)
+  log.str = log.str .. str .. "\n\n"
+end
+
+log.print = function()
+  if log.str ~= "" then
+    vim.notify(log.str)
+  end
+end
+
+log.clear = function()
+  log.str = ""
 end
 
 return log

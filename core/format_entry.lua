@@ -69,9 +69,14 @@ local format_word_list = function(list, title)
 
       if syn_grp[i + 1] then
         sub_str = sub_str .. syn.wd .. alts_str .. ", "
+        if math.fmod(i, 6) == 5 then
+          sub_str = sub_str .. "\n\t\t"
+        end
       else
-        sub_str = sub_str .. syn.wd .. alts_str
+        sub_str = sub_str .. syn.wd .. alts_str .. "\n"
       end
+
+
     end
 
     str = str .. "\t\t" .. sub_str .. "\n"
@@ -82,7 +87,6 @@ end
 
 local format_entry = function(entry)
   entry = entry.value[2]
-  --log.detable(entry.def[1].sseq[1][1][2])
 
   local formatted_file_path = Thesaurus.cache_file_path_template:gsub("_WORD_", entry.hwi.hw)
 
@@ -116,7 +120,6 @@ local format_entry = function(entry)
       str = str .. "\tExample: " .. sense.dt[2][2][1].t .. "\n\n"
     end
 
-    log.debug(str)
     if sense.syn_list then
       str = str .. format_word_list(sense.syn_list, "Synonyms")
     end
@@ -149,8 +152,7 @@ local format_entry = function(entry)
   end
 
   formatted_file:close()
-  vim.api.nvim_exec(":view " .. formatted_file_path, false)
-  --vim.api.nvim_exec(":set foldmethod=indent", false)
+  vim.api.nvim_exec(Thesaurus.opts.open_command .. formatted_file_path, false)
 end
 
 return format_entry

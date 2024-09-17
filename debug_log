@@ -1,36 +1,56 @@
 DEBUG:
-1: a very small piece 
-	Example: she left only a {it}bit{/it} of the broccoli on her plate
+1: as in {it}regional{/it}
+
+
+DEBUG:
+1: a local unit of an organization 
+	Example: the truck drivers are members of {it}Local{/it} 349 of the Teamsters' Union
 
 
 
 DEBUG:
-2: a broken or irregular part of something that often remains incomplete 
-	Example: {it}bits{/it} of cookie scattered on the table
+2: a usually longtime resident of a locality 
+	Example: few {it}locals{/it} seem to patronize the city's touristy restaurants, leaving them to diners who prefer atmosphere over food
 
 
 
 DEBUG:
-3: a very small amount 
-	Example: I'll have only a {it}bit{/it} of food right now
+1: a local unit of an organization 
+	Example: the truck drivers are members of {it}Local{/it} 349 of the Teamsters' Union
 
 
 
 DEBUG:
-4: an indefinite but usually short period of time 
-	Example: this will only take a {it}bit{/it}
+2: a usually longtime resident of a locality 
+	Example: few {it}locals{/it} seem to patronize the city's touristy restaurants, leaving them to diners who prefer atmosphere over food
 
 
 
 DEBUG:
-5: a performance regularly presented by an individual or group 
-	Example: known for a comedic {it}bit{/it} in which she portrayed a very nervous student driver
+1: as in {it}regional{/it}
+
+
+DEBUG:
+1: the entrance room of a building 
+	Example: please wait in the {it}entry{/it} while I get the person you want
 
 
 
 DEBUG:
-6: something that is pleasing to eat because it is rare or a luxury 
-	Example: wielding silver trays, the servers offered partygoers a variety of exotic-looking {it}bits{/it}
+2: the means or right of entering or participating in 
+	Example: believed that a college education was one's {it}entry{/it} to a life of luxury
+
+
+
+DEBUG:
+1: the entrance room of a building 
+	Example: please wait in the {it}entry{/it} while I get the person you want
+
+
+
+DEBUG:
+2: the means or right of entering or participating in 
+	Example: believed that a college education was one's {it}entry{/it} to a life of luxury
 
 
 
