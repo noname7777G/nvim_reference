@@ -1,8 +1,36 @@
 DEBUG:
-{
-  display = "test, verb: to put (something) to a test",
-  index = 2,
-  ordinal = "test, verb: to put (something) to a test",
-  value = { "test, verb: to put (something) to a test", "ref to entry" }
-}
+1: a very small piece 
+	Example: she left only a {it}bit{/it} of the broccoli on her plate
+
+
+
+DEBUG:
+2: a broken or irregular part of something that often remains incomplete 
+	Example: {it}bits{/it} of cookie scattered on the table
+
+
+
+DEBUG:
+3: a very small amount 
+	Example: I'll have only a {it}bit{/it} of food right now
+
+
+
+DEBUG:
+4: an indefinite but usually short period of time 
+	Example: this will only take a {it}bit{/it}
+
+
+
+DEBUG:
+5: a performance regularly presented by an individual or group 
+	Example: known for a comedic {it}bit{/it} in which she portrayed a very nervous student driver
+
+
+
+DEBUG:
+6: something that is pleasing to eat because it is rare or a luxury 
+	Example: wielding silver trays, the servers offered partygoers a variety of exotic-looking {it}bits{/it}
+
+
 

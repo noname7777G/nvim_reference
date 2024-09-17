@@ -1,12 +1,8 @@
-local inspect = require"core/inspect"
+local pick_entry = require"core/pick"
+
 local log = require"core/log"
-local format_entry = require"core/format_entry"
 
 log.start()
-
-local p_inspect = function(tab)
-  log.debug(inspect(tab))
-end
 
 Thesaurus = {}
 Thesaurus.opts = {}
@@ -14,54 +10,41 @@ Thesaurus.opts = {}
 Thesaurus.opts.key = ""
 Thesaurus.opts.cache_words = true
 
-local home = os.getenv("HOME")
-local url = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/_WORD_?key="
+Thesaurus.home = os.getenv("HOME")
+Thesaurus.url = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/_WORD_?key="
 
-Thesaurus.cache_file_path_template = home .. (Thesaurus.opts.cache_file_path or "/.cache/nvim/thesaurus") .. "/_WORD_"
-Thesaurus.temp_file =  home .. (Thesaurus.opts.temp_file or "/.cache/nvim/thesaurus/temp")
+Thesaurus.cache_file_path_template = Thesaurus.home .. (Thesaurus.opts.cache_file_path or "/.cache/nvim/thesaurus") .. "/_WORD_"
+Thesaurus.temp_file =  Thesaurus.home .. (Thesaurus.opts.temp_file or "/.cache/nvim/thesaurus/temp")
 
-local wget_entry = function(word)
-  local command = "wget -q -O " .. Thesaurus.temp_file .. " " .. Thesaurus.opts.key
-  local not_err, errdesc, errno = os.execute(command)
+Thesaurus.current_entry_file_path = "" --fucking callbacks
+
+local wget_entries = function(word)
+  local not_err, errdesc, errno = os.execute("wget -q -O " .. Thesaurus.temp_file .. " " .. Thesaurus.url:gsub("_WORD_", word) .. Thesaurus.opts.key)
 
   if not not_err then -- confusing, I know
-    return nil, errdesc, errno
+    log.error(errdesc, errno)
+    return nil
   end
 
-  return format_entry(word)
-end
+  local entries_file
+  entries_file, errdesc, errno = io.open(Thesaurus.temp_file, "r")
 
-local get_word_files = function(word)
-  local word_file, errdesc, errno
-
-  if Thesaurus.opts.cache_words then
-    local path = Thesaurus.cache_file_path_template:gsub("_WORD_", word)
-    word_file, errdesc, errno = io.open(path, "r")
-
-    if errno == 2 then
-      word_file, errdesc, errno = wget_entry(word)
-
-    elseif not word_file then
-      log.error(errdesc .. "\nError reading cache, downloading from web.", errno)
-      word_file, errdesc, errno = wget_entry(word)
-
-    end
-  else
-
-    word_file, errdesc, errno = wget_entry(word)
+  if not entries_file then
+    log.error(errdesc, errno)
+    return nil
   end
 
-  return word_file, errdesc, errno
+  return entries_file
 end
 
 Thesaurus.lookup = function(word)
-  local word_file, errdesc, errno = get_word_files(word)
+  local entries_file = wget_entries(word)
 
-  if not word_file then
-    log.error(errdesc, errno)
+  if not entries_file then
     return
   end
 
+  pick_entry(entries_file)
 end
 
 Thesaurus.lookup_cword = function()

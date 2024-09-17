@@ -3,22 +3,40 @@ local finders = require "telescope.finders"
 local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
+
+local format_entry = require"core/format_entry"
+
 local log = require"core/log"
-local inspect = require"core/inspect"
 
-local thes_pick = {}
+local make_entry_list = function(entries_file)
+  local entries = vim.json.decode(entries_file:read(), {objects = true, array = true})
 
-thes_pick.sense = function(sense_list, opts, old_word)
+  local entry_list = {}
+
+  for i, entry in ipairs(entries) do
+    entry_list[i] = {
+      entry.hwi.hw .. ", " .. entry.fl,
+      entry,
+      entry.hwi.hw,
+    }
+  end
+
+  return entry_list
+end
+
+local pick_entry = function(entries_file, opts)
+  local entry_list = make_entry_list(entries_file)
+
   pickers.new(opts, {
-    promt_title = "Sense",
+    promt_title = "Entry",
     finder = finders.new_table {
-      results = sense_list,
+      results = entry_list,
 
       entry_maker = function(entry)
         return {
         value = entry,
         display = entry[1],
-        ordinal = entry[1],
+        ordinal = entry[3],
         }
       end
       },
@@ -29,7 +47,8 @@ thes_pick.sense = function(sense_list, opts, old_word)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-          log.debug(inspect(selection))
+
+        format_entry(selection)
       end)
       return true
     end,
@@ -37,4 +56,4 @@ thes_pick.sense = function(sense_list, opts, old_word)
   }):find()
 end
 
-return thes_pick
+return pick_entry
