@@ -51,9 +51,9 @@ local pick_entry = function(entries_file, source, opts)
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
         if source == "t" then
-          Reference.Thesaurus.format_entry(selection)
+          Reference.thesaurus.format_entry(selection)
         elseif source == "d" then
-          Reference.Dictionary.format_entry(selection)
+          Reference.tictionary.format_entry(selection)
         else
           Log.user_err("Invalid source choice:" .. source)
         end

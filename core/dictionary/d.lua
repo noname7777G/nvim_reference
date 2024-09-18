@@ -1,6 +1,6 @@
 local d = {}
 
-d.lookup = require"lookup"
-d.format_entry = require"format_entry"
+d.lookup = require"core/dictionary/lookup"
+d.format_entry = require"core/dictionary/format_entry"
 
 return d

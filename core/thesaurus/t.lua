@@ -1,6 +1,6 @@
 local t = {}
 
-t.lookup = require"lookup"
-t.format_entry = require"format_entry"
+t.lookup = require"core/thesaurus/lookup"
+t.format_entry = require"core/thesaurus/format_entry"
 
 return t
