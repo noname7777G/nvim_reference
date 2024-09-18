@@ -4,14 +4,10 @@ local conf = require("telescope.config").values
 local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 
-local format_entry = require"core/format_entry"
-
-local log = require"core/log"
-
 local make_entry_list = function(entries_file)
   local entries = vim.json.decode(entries_file:read(), {objects = true, array = true})
   if not entries[1].hwi then
-    log.user_err("No entry for that word.")
+    Log.user_err("No entry for that word.")
     return nil
   end
 
@@ -28,7 +24,7 @@ local make_entry_list = function(entries_file)
   return entry_list
 end
 
-local pick_entry = function(entries_file, opts)
+local pick_entry = function(entries_file, source, opts)
   local entry_list = make_entry_list(entries_file)
   if not entry_list then
     return
@@ -50,12 +46,17 @@ local pick_entry = function(entries_file, opts)
 
     sorter = conf.generic_sorter(opts),
 
-    attach_mappings = function(prompt_bufnr, map)
+    attach_mappings = function(prompt_bufnr, _)
       actions.select_default:replace(function()
         actions.close(prompt_bufnr)
         local selection = action_state.get_selected_entry()
-
-        format_entry(selection)
+        if source == "t" then
+          Reference.Thesaurus.format_entry(selection)
+        elseif source == "d" then
+          Reference.Dictionary.format_entry(selection)
+        else
+          Log.user_err("Invalid source choice:" .. source)
+        end
       end)
       return true
     end,

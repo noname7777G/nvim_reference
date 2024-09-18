@@ -1,5 +1,3 @@
-local log = require"core/log"
-
 local format_wvrs = function(wvrs)
   local str = "(" .. wvrs[1].wvl .. ": " .. wvrs[1].wva
   table.remove(wvrs, 1)
@@ -41,7 +39,7 @@ local format_wsls = function(wsls)
     return str .. "]"
   end
 
-  for i, wsl in ipairs(wsls) do
+  for _, wsl in ipairs(wsls) do
     str = str .. ", " .. wsl
   end
 
@@ -69,16 +67,15 @@ local format_word_list = function(list, title)
 
       if syn_grp[i + 1] then
         sub_str = sub_str .. syn.wd .. alts_str .. ", "
-        if math.fmod(i, 6) == 5 then
+
+        if math.fmod(i, Reference.opts.thesaurus.max_words_per_line) == 5 then
           sub_str = sub_str .. "\n\t\t"
         end
+
       else
         sub_str = sub_str .. syn.wd .. alts_str .. "\n"
       end
-
-
     end
-
     str = str .. "\t\t" .. sub_str .. "\n"
   end
 
@@ -88,11 +85,9 @@ end
 local format_entry = function(entry)
   entry = entry.value[2]
 
-  local formatted_file_path = Thesaurus.cache_file_path_template:gsub("_WORD_", entry.hwi.hw)
-
-  local formatted_file, errdesc, errno = io.open(formatted_file_path, "w")
+  local formatted_file, errdesc, errno = io.open(Reference.cache_file, "w")
   if not formatted_file then
-    log.error(errdesc, errno)
+    Log.error(errdesc, errno)
     return nil
   end
 
@@ -152,7 +147,7 @@ local format_entry = function(entry)
   end
 
   formatted_file:close()
-  vim.api.nvim_exec(Thesaurus.opts.open_command .. formatted_file_path, false)
+  vim.api.nvim_exec(Reference.opts.open_command .. Reference.cache_file, false)
 end
 
 return format_entry
