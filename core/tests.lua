@@ -1,6 +1,6 @@
 require"core/reference"
 
-Reference.opts.thesaurus.key = ""
+Reference.opts.thesaurus.key = "you can't see me"
 Reference.opts.dictionary.key = "" -- dictionary functionality to come.
 
 vim.keymap.set('n', "<leader>tl", Reference.thesaurus.lookup.cword)
