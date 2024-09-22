@@ -57,6 +57,7 @@ local format_word_list = function(list, title)
 
       if syn.wvrs then
         alts_str = " " .. format_wvrs(syn.wvrs)
+
       elseif syn.wvbvrs then
         alts_str = " " .. format_wvbvrs(syn.wvbvrs)
       end
@@ -71,42 +72,18 @@ local format_word_list = function(list, title)
         if math.fmod(i, Reference.opts.thesaurus.max_words_per_line) == 5 then
           sub_str = sub_str .. "\n\t\t"
         end
-
       else
         sub_str = sub_str .. syn.wd .. alts_str .. "\n"
       end
     end
+
     str = str .. "\t\t" .. sub_str .. "\n"
   end
 
   return str .. "\n"
 end
 
-local format_entry = function(entry)
-  entry = entry.value[2]
-
-  local formatted_file, errdesc, errno = io.open(Reference.cache_file, "w")
-  if not formatted_file then
-    Log.error(errdesc, errno)
-    return nil
-  end
-
-  local offensive = ""
-  if entry.meta.offensive then
-    offensive = ", offensive"
-  end
-  formatted_file:write(entry.hwi.hw .. ", " .. entry.fl .. offensive .. "\n\nOther forms:\n")
-
-  local stems = ""
-  local cnt = 1
-  for _, stem in ipairs(entry.meta.stems) do
-    if stem ~= entry.hwi.hw then
-      stems = stems .. cnt .. ": " .. stem .. "\n"
-      cnt = cnt + 1
-    end
-  end
-  formatted_file:write(stems .. "\nSenses:\n")
-
+local format_body = function(entry, formatted_file)
   for i, sense in ipairs(entry.def[1].sseq) do
     sense = sense[1][2]
     local str = i .. ": " .. sense.dt[1][2] .. "\n"
@@ -145,9 +122,41 @@ local format_entry = function(entry)
 
     formatted_file:write(str)
   end
+end
+
+local format_header = function(entry, formatted_file)
+  local offensive = ""
+  if entry.meta.offensive then
+    offensive = ", offensive"
+  end
+
+  formatted_file:write(entry.hwi.hw .. ", " .. entry.fl .. offensive .. "\n\nOther forms:\n")
+
+  local stems = ""
+  for i, stem in ipairs(entry.meta.stems) do
+    if stem ~= entry.hwi.hw then
+      stems = stems .. i .. ": " .. stem .. "\n"
+    end
+  end
+  formatted_file:write(stems .. "\nSenses:\n")
+
+  format_body(entry, formatted_file)
+
+end
+
+local format_entry = function(entries)
+  local formatted_file, errdesc, errno = io.open(Reference.cache_file, "w")
+  if not formatted_file then
+    Reference.log.error(errdesc, errno)
+    return
+  end
+
+  for _, entry in ipairs(entries.value) do
+    format_header(entry, formatted_file)
+  end
 
   formatted_file:close()
-  vim.api.nvim_exec(Reference.opts.open_command .. Reference.cache_file, false)
+  Reference.open()
 end
 
 return format_entry

@@ -1,4 +1,4 @@
-Log = {}
+local log = {}
 
 local function detable_rec(table, str, depth)
   depth = depth or 0
@@ -16,35 +16,44 @@ local function detable_rec(table, str, depth)
   return str
 end
 
-Log.detable = function(table)
-  Log.debug(detable_rec(table))
+log.str = ""
+
+log.print = function()
+  if log.str ~= "" then
+    vim.notify(log.str)
+  end
 end
 
-Log.str = ""
+log.clear = function()
+  log.str = ""
+end
 
-Log.error = function(errdesc, errno)
+log.error = function(errdesc, errno)
   errdesc = errdesc or "nil"
   errno = errno or "nil"
   local f = debug.getinfo(2)
 
-  Log.str = Log.str .. "ERROR:\n" .. "TIME: " .. os.date() .. "\nCALLING FUNCTION: " .. f.name .. "\nLINE: " .. f.currentline .. "\nFILE: " .. f.short_src ..  "\nERRDESC: " .. errdesc .. "\nERRNO: " .. errno .. "\n\n"
+  log.str = log.str .. "ERROR:\n" .. "TIME: " .. os.date() .. "\nCALLING FUNCTION: " .. f.name .. "\nLINE: " .. f.currentline .. "\nFILE: " .. f.short_src ..  "\nERRDESC: " .. errdesc .. "\nERRNO: " .. errno .. "\n\n"
 end
 
-Log.debug = function(str)
+log.debug = function(str, p_now)
   str = str or "nil"
-  Log.str = Log.str .. "DEBUG:\n" .. str .. "\n\n"
-end
 
-Log.user_err = function(str)
-  Log.str = Log.str .. str .. "\n\n"
-end
+  if type(str) == "table" then
+    log.str = log.str .. "DEBUG:\n" .. detable_rec(str) .. "\n\n"
+  else
+    log.str = log.str .. "DEBUG:\n" .. str .. "\n\n"
+  end
 
-Log.print = function()
-  if Log.str ~= "" then
-    vim.notify(Log.str)
+  if p_now then
+    log.print()
+    log.clear()
   end
 end
 
-Log.clear = function()
-  Log.str = ""
+log.user_err = function(str)
+  log.str = log.str .. str .. "\n\n"
 end
+
+
+return log
