@@ -14,7 +14,6 @@ local format_body = function(entries)
   end
 
   formatted_file:close()
-  Reference.open()
 end
 
 return format_body
