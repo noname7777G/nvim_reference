@@ -4,8 +4,13 @@ local url = "https://dictionaryapi.com/api/v3/references/collegiate/json/_WORD_?
 
 lookup.str = function(word)
   if Reference.opts.thesaurus.key == "" then
-    Reference.log.user_err("No dictionanry key provided")
+    Reference.log.user_err("No dictionanry key provided.")
 
+    return
+  end
+
+  if not word then
+    Reference.log.user_err("No word entered.")
     return
   end
 
@@ -17,14 +22,12 @@ lookup.str = function(word)
   end
 
   Reference.pick(entries, "dictionary")
-
-  Reference.log.print()
-  Reference.log.clear()
 end
 
 lookup.cword = function()
   local word = Reference.filter_cword()
-  lookup.str(word)
+ lookup.str(word)
+
 
 end
 

@@ -4,8 +4,13 @@ local url = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/_WOR
 
 lookup.str = function(word)
   if Reference.opts.thesaurus.key == "" then
-    Reference.log.user_err("No thesaurus key provided")
+    Reference.log.user_err("No thesaurus key provided.")
 
+    return
+  end
+
+  if not word then
+    Reference.log.user_err("No word entered.")
     return
   end
 
@@ -17,9 +22,6 @@ lookup.str = function(word)
   end
 
   Reference.pick(entries, "thesaurus")
-
-  Reference.log.print()
-  Reference.log.clear()
 end
 
 lookup.cword = function()

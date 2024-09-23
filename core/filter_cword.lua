@@ -4,9 +4,7 @@ local get_words = function()
   if vim.fn.mode() == "v" then
     local vstart = vim.fn.getpos("'<")
     local vend = vim.fn.getpos("'>")
-    local line_start = vstart[2]
-    local line_end = vend[2]
-    ret = vim.fn.getline(line_start,line_end)
+    ret = vim.fn.getline(vstart[2], vend[2])
     ret = ret:gsub(" ", [[%20]])
 
   elseif vim.fn.mode() == "n" then
@@ -15,8 +13,8 @@ local get_words = function()
 
   else
     Reference.log.user_err("please ensure you are in visual or normal mode")
-    return
 
+    return
   end
 
   return ret
