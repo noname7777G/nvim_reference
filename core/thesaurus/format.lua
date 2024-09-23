@@ -69,7 +69,8 @@ local format_word_list = function(list, title)
       if syn_grp[i + 1] then
         sub_str = sub_str .. syn.wd .. alts_str .. ", "
 
-        if math.fmod(i, Reference.opts.thesaurus.max_words_per_line) == 5 then
+        local word_mod = Reference.opts.thesaurus.max_words_per_line
+        if math.fmod(i, word_mod) == word_mod - 1 then
           sub_str = sub_str .. "\n\t\t"
         end
       else
@@ -130,15 +131,22 @@ local format_header = function(entry, formatted_file)
     offensive = ", offensive"
   end
 
-  formatted_file:write(entry.hwi.hw .. ", " .. entry.fl .. offensive .. "\n\nOther forms:\n")
+  formatted_file:write(entry.hwi.hw .. ", " .. entry.fl .. offensive)
 
-  local stems = ""
-  for i, stem in ipairs(entry.meta.stems) do
-    if stem ~= entry.hwi.hw then
-      stems = stems .. i .. ": " .. stem .. "\n"
+  if entry.meta.stems then
+    local stems = ""
+
+    formatted_file:write("\n\nStems:\n")
+
+    for i, stem in ipairs(entry.meta.stems) do
+      if stem ~= entry.hwi.hw then
+        stems = stems .. i .. ": " .. stem .. "\n"
+      end
     end
+    formatted_file:write(stems)
   end
-  formatted_file:write(stems .. "\nSenses:\n")
+
+  formatted_file:write("\nSenses:\n")
 
   format_body(entry, formatted_file)
 

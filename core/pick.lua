@@ -85,6 +85,13 @@ end
 local pick_entry = function(entries, type, opts)
   entries = make_entry_list(entries)
 
+  if #entries == 1 then
+    Reference[type].format(entries[1])
+    Reference.open()
+
+    return
+  end
+
   pickers.new(opts, {
     promt_title = "Entry",
     finder = finders.new_table {
