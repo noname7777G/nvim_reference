@@ -1,5 +1,3 @@
-require"core/log"
-
 Reference = {}
 
 Reference.opts = {} --Reference options
